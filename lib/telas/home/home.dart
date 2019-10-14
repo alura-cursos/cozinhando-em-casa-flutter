@@ -1,14 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cozinhando_casa2/modelos/receita.dart';
 import 'dart:convert';
-import '../detalhes/detalhes.dart';
 
-class Home extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => new HomeState();
-}
-
-class HomeState extends State<Home> {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _construirHome();
@@ -17,79 +10,40 @@ class HomeState extends State<Home> {
   Widget _construirHome() {
     return Scaffold(
         body: SizedBox(
-            child: FutureBuilder(
-              future: DefaultAssetBundle
-                .of(context)
-                .loadString('assets/receitas.json'),
-              builder: (context, snapshot) {
-                List<dynamic> receitas = json.decode(snapshot.data.toString());
-
-                return ListView.builder(
-                  itemBuilder: (BuildContext context, int index) {
-                  Receita receita = Receita.fromJson(receitas[index]);
-                  return _construirCard(receita);
-                },
-                  itemCount: receitas == null ? 0 : receitas.length,
-                );
-              },
-            )
+            height: 270,
+            child: _construirCard()
         ),
         appBar: _construirAppBar('Cozinhando em Casa')
     );
   }
 
-  Widget _construirCard(receita) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Detalhes(receita: receita)));
-        },
-        child: Card(
+  Widget _construirCard() {
+    return Card(
         margin: EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
             Stack(
               children: <Widget>[
-                _construirImagemCard(receita.foto),
-                _construirImagemGradienteCard(),
-                _construirTituloCard(receita.titulo)
+                _construirImagemCard('https://receitas.carolecrema.com.br/wp-content/uploads/2018/10/shutterstock_662262010-848x477.jpg'),
+                _construirTituloCard('Bolo de Milho')
               ],
             ),
           ],
-        ))
+        )
     );
   }
 
   Widget _construirImagemCard(String imagem) {
-    return
-//      ClipRRect(
-//        borderRadius: BorderRadius.all(Radius.circular(6)),
-//        child:
-        Image.asset(imagem,
+    return Image.network(imagem,
         fit: BoxFit.fill,
         height: 238);
-//    );
   }
 
   Widget _construirTituloCard(String titulo) {
     return Positioned(
         bottom: 10.0,
         left: 10.0,
-        child: Text(titulo, style: TextStyle(color: Colors.white, fontSize: 20))
-    );
-  }
-
-  Widget _construirImagemGradienteCard() {
-    return Container(
-      height: 238, decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: FractionalOffset.topCenter,
-          end: FractionalOffset.bottomCenter,
-          colors: [
-            Colors.transparent,
-            Colors.deepOrange.withOpacity(0.7)
-          ]
-        )
-      )
+        child: Text(titulo, style: TextStyle(fontSize: 20))
     );
   }
 
