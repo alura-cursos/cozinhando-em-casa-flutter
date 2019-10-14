@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cozinhando_casa2/modelos/receita.dart';
 import 'dart:convert';
-import '../detalhes/detalhes.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -27,7 +26,7 @@ class HomeState extends State<Home> {
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
                   Receita receita = Receita.fromJson(receitas[index]);
-                  return _construirCard(receita);
+                  return _construirCard(receita.foto, receita.titulo);
                 },
                   itemCount: receitas == null ? 0 : receitas.length,
                 );
@@ -38,36 +37,27 @@ class HomeState extends State<Home> {
     );
   }
 
-  Widget _construirCard(receita) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Detalhes(receita: receita)));
-        },
-        child: Card(
+  Widget _construirCard(foto, titulo) {
+    return Card(
         margin: EdgeInsets.all(16),
         child: Column(
           children: <Widget>[
             Stack(
               children: <Widget>[
-                _construirImagemCard(receita.foto),
+                _construirImagemCard(foto),
                 _construirImagemGradienteCard(),
-                _construirTituloCard(receita.titulo)
+                _construirTituloCard(titulo)
               ],
             ),
           ],
-        ))
+        )
     );
   }
 
   Widget _construirImagemCard(String imagem) {
-    return
-//      ClipRRect(
-//        borderRadius: BorderRadius.all(Radius.circular(6)),
-//        child:
-        Image.asset(imagem,
+    return Image.asset(imagem,
         fit: BoxFit.fill,
         height: 238);
-//    );
   }
 
   Widget _construirTituloCard(String titulo) {
